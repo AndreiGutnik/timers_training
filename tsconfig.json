@@ -1,10 +1,10 @@
 {
-  "compilerOptions": {
-    "moduleResolution": "node",		
-    "target": "ES2023",
-    "jsx": "react"  
-  },
-  "include": [
+	"compilerOptions": {
+		"moduleResolution": "node",
+		"target": "esnext",
+		"jsx": "react"
+	},
+	"include": [
 		"src"
 	]
 }

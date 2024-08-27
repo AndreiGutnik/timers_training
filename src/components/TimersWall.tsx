@@ -1,9 +1,9 @@
 import React from 'react';
 
-export const TimerWall = ()=>{
+export const TimersWall = ()=>{
 	return(
 		<>
-			<p>Timer Wall</p>
+			<p>Timers Wall</p>
 		</>
 	)
 }

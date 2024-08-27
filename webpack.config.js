@@ -7,32 +7,30 @@ module.exports = (env) => {
 
 		devServer: {
 			port: 3000,
-    	open: true
+			open: true
 		},
 
 		entry: path.resolve(__dirname, 'src', 'App.tsx'),
 
 		output: {
-	    path: path.resolve(__dirname, 'dist'),
-	  },
-		
+			path: path.resolve(__dirname, 'dist'),
+		},
+
 		plugins: [new HtmlWebpackPlugin({template: 'public/index.html',})],
 		module: {
 			rules: [
 				{
-					test: /\.(js|tsx)$/,		
-					exclude: /node_modules/,			
+					test: /\.tsx$/,
+					exclude: path.resolve(__dirname, 'node_modules'),
 					use: {
 						loader: 'ts-loader',
-						options: {
-							transpileOnly: true,
-						}
-					},							
+
+					},
 				},
 			],
 		},
 		resolve: {
-	    extensions: ['.js', '.jsx', '.ts', '.tsx'],
-	  },
+			extensions: ['.js', '.jsx', '.ts', '.tsx'],
+		},
 	}
 };
