@@ -1,0 +1,11 @@
+.timersWallContainer{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap:16px;
+}
+.timersWall{
+	display: flex;
+	flex-direction: column;
+	gap:16px;
+}

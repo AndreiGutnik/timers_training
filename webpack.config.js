@@ -1,6 +1,11 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const rootDir = __dirname
+const distDir = path.resolve(rootDir, 'dist')
+const publicDir = path.resolve(rootDir, 'public')
+const modulesDir = path.resolve(rootDir, 'node_modules')
+
 module.exports = (env) => {
 	return {
 		mode: env.mode ?? 'development',
@@ -10,27 +15,47 @@ module.exports = (env) => {
 			open: true
 		},
 
-		entry: path.resolve(__dirname, 'src', 'App.tsx'),
+		entry: path.resolve(rootDir, 'src', 'App.tsx'),
 
 		output: {
-			path: path.resolve(__dirname, 'dist'),
+			path: distDir,
 		},
 
-		plugins: [new HtmlWebpackPlugin({template: 'public/index.html',})],
+		plugins: [
+			new HtmlWebpackPlugin({
+				title: 'Timers',
+				template: path.resolve(publicDir, 'index.html'),
+				module: true,
+				lang: 'en',
+			})],
 		module: {
 			rules: [
+				//css loader
+				{
+					test: /\.css$/i,
+					use: [
+						'style-loader',
+						{
+							loader: 'css-loader',
+							// options: {
+							// 	modules: true,
+							// },
+						},
+					],
+				},
+				//ts loader
 				{
 					test: /\.tsx$/,
-					exclude: path.resolve(__dirname, 'node_modules'),
+					exclude: modulesDir,
 					use: {
 						loader: 'ts-loader',
-
 					},
 				},
 			],
 		},
+
 		resolve: {
 			extensions: ['.js', '.jsx', '.ts', '.tsx'],
 		},
 	}
-};
+}
