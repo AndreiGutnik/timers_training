@@ -37,9 +37,9 @@ module.exports = (env) => {
 						'style-loader',
 						{
 							loader: 'css-loader',
-							// options: {
-							// 	modules: true,
-							// },
+							options: {
+								modules: true,
+							},
 						},
 					],
 				},

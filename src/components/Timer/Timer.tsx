@@ -1,45 +1,55 @@
-import { useEffect, useState } from 'react';
-import './style.css'
+import { useEffect, useRef, useState } from 'react';
+import * as css from './style.css'
 
 import * as dayjs from 'dayjs'
+import { ITimer } from '../../types';
 
-export interface TimerDef{
-	addTime: dayjs.Dayjs;
+interface TimerCardProps {
+	value:ITimer;
+	onPlay: ()=> void;
+	onPause: ()=>void;
+	onDelete: ()=> void;
 }
 
-interface TimerProps {
-	value:TimerDef;
-}
+export const TimerCard = (props: TimerCardProps)=>{
+	const {addTime, isActive, elapsedTime} = props.value;
 
-export const Timer = (props: TimerProps)=>{
-	const {addTime} = props.value;
-
-	const [duration, setduration] = useState(dayjs.duration(0));
+	const intervalId = useRef(null);
+	const [displayTime, setDisplayTime] = useState(elapsedTime);
 
 	useEffect(() => {
-		setInterval(()=>{
-			updateDuration()
-		}, 1000)
-	}, []);
+    if (isActive && addTime) {
+      intervalId.current = setInterval(() => {
+        const currentTime = dayjs().diff(addTime) + elapsedTime;
+        setDisplayTime(currentTime);
+      }, 1000);
+    } else {
+      if (intervalId.current) {
+        clearInterval(intervalId.current);
+      }
+      setDisplayTime(elapsedTime);
+    }
 
-	const updateDuration = ()=>{
-		const currentTime = dayjs()
-		const newDuration = dayjs.duration(currentTime.diff(addTime))
-		setduration(newDuration)
-	}
+    return () => {
+      if (intervalId.current) {
+        clearInterval(intervalId.current);
+      }
+    };
+  }, [isActive, addTime, elapsedTime]);
 
 	const getValue =()=>{
-		return duration.format('HH:mm:ss')
+		const newDuration = dayjs.duration(displayTime)
+		return newDuration.format('HH:mm:ss')
 	}
 
 	return(
-		<div className="timer">
+		<div className={css.timer}>
 				<div key='container'>{getValue()}
 				<div key='action'>
 					<div>
-						<button>start</button>
-						<button>pause</button>
-						<button>delete</button>
+						<button onClick={props.onPlay}>Play</button>
+						<button onClick={props.onPause}>Pause</button>
+						<button onClick={props.onDelete}>Delete</button>
 					</div>
 				</div>
 			</div>
