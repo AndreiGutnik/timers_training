@@ -15,36 +15,36 @@ export const TimersWall = ()=>{
 	}
 
 	const handlePlay = (timer: ITimer) => {
-    const newTimers = timers.map((t) => {
-      if (t.id === timer.id) {
-        return {
-          ...t,
-          addTime: dayjs(),
-          isActive: true,
-        };
-      }
-      return t;
-    });
+		const newTimers = timers.map((t) => {
+			if (t.id === timer.id) {
+				return {
+					...t,
+					addTime: dayjs(),
+					isActive: true,
+				};
+			}
+			return t;
+		});
 
-    setTimers(newTimers);
-  };
+		setTimers(newTimers);
+	};
 
 	const handlePause = (timer: ITimer) => {
-    const newTimers = timers.map((t) => {
-      if (t.id === timer.id) {
-        const currentElapsedTime = dayjs().diff(t.addTime);
-        return {
-          ...t,
-          elapsedTime: t.elapsedTime + currentElapsedTime,
+		const newTimers = timers.map((t) => {
+			if (t.id === timer.id) {
+				const currentElapsedTime = dayjs().diff(t.addTime);
+				return {
+					...t,
+					elapsedTime: t.elapsedTime + currentElapsedTime,
 					addTime: null,
-          isActive: false,
-        };
-      }
-      return t;
-    });
+					isActive: false,
+				};
+			}
+			return t;
+		});
 
-    setTimers(newTimers);
-  };
+		setTimers(newTimers);
+	};
 
 	const handleDelete = (id:string)=>{
 		setTimers(prevTimers => prevTimers.filter(t=>t.id !== id))
@@ -52,7 +52,7 @@ export const TimersWall = ()=>{
 
 	return(
 		<div className={css.timersWall}>
-			<div className='timersWallActions'>
+			<div key='timersWallActions'>
 				<button onClick={handleAddTimer}>+ Add timer</button>
 			</div>
 			<div className={css.timersWallContainer}>
