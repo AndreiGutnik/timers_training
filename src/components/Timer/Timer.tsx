@@ -3,39 +3,38 @@ import * as css from './style.css'
 
 import * as dayjs from 'dayjs'
 import { ITimer } from '../../types';
+import { isTimerActive } from '../../utils/isTimerActive';
 
 interface TimerCardProps {
-	value:ITimer;
+	timer:ITimer;
 	onPlay: ()=> void;
 	onPause: ()=>void;
 	onDelete: ()=> void;
 }
 
 export const TimerCard = (props: TimerCardProps)=>{
-	const {addTime, isActive, elapsedTime} = props.value;
+	const {addTime, elapsedTime} = props.timer;
+
+	const isActive = isTimerActive(props.timer)
 
 	const intervalId = useRef(null);
 	const [displayTime, setDisplayTime] = useState(elapsedTime);
 
 	useEffect(() => {
-    if (isActive && addTime) {
-      intervalId.current = setInterval(() => {
-        const currentTime = dayjs().diff(addTime) + elapsedTime;
-        setDisplayTime(currentTime);
-      }, 1000);
-    } else {
-      if (intervalId.current) {
-        clearInterval(intervalId.current);
-      }
-      setDisplayTime(elapsedTime);
-    }
-
-    return () => {
-      if (intervalId.current) {
-        clearInterval(intervalId.current);
-      }
-    };
-  }, [isActive, addTime, elapsedTime]);
+		if(!isActive){
+			setDisplayTime(elapsedTime);
+			return;
+		}
+		intervalId.current = setInterval(() => {
+			const currentTime = dayjs().diff(addTime) + elapsedTime;
+			setDisplayTime(currentTime);
+		}, 1000);
+		return () => {
+			if (intervalId.current) {
+				clearInterval(intervalId.current);
+			}
+		};
+	}, [isActive, addTime, elapsedTime]);
 
 	const getValue =()=>{
 		const newDuration = dayjs.duration(displayTime)
@@ -47,8 +46,8 @@ export const TimerCard = (props: TimerCardProps)=>{
 				<div key='container'>{getValue()}
 				<div key='action'>
 					<div>
-						<button onClick={props.onPlay}>Play</button>
-						<button onClick={props.onPause}>Pause</button>
+						<button onClick={props.onPlay} disabled={isActive}>Play</button>
+						<button onClick={props.onPause} disabled={!isActive}>Pause</button>
 						<button onClick={props.onDelete}>Delete</button>
 					</div>
 				</div>

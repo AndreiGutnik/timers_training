@@ -3,51 +3,38 @@ import { TimerCard } from '../Timer/Timer';
 import * as dayjs from 'dayjs'
 
 import * as css from './style.css'
-import { generateKey } from '../../utils/generateKey';
 import { ITimer } from '../../types';
+import { useTimers } from '../../hooks/useTimers';
 
 
 export const TimersWall = ()=>{
-	const [timers, setTimers] = useState<ITimer[]>([]);
+	const {timers, addTimer, updateTimer, deleteTimer} = useTimers()
 
 	const handleAddTimer = ()=>{
-		setTimers(prevTimers => [...prevTimers, {id: generateKey(), addTime: null, elapsedTime: 0, isActive: false}])
+		const timer: ITimer = {addTime: null, elapsedTime: 0}
+		addTimer(timer)
 	}
 
-	const handlePlay = (timer: ITimer) => {
-		const newTimers = timers.map((t) => {
-			if (t.id === timer.id) {
-				return {
-					...t,
-					addTime: dayjs(),
-					isActive: true,
-				};
-			}
-			return t;
-		});
+	const getTimer = (id: string) => {
+		const timer = timers.get(id)
+		if(timer) return timer
 
-		setTimers(newTimers);
+		throw new Error(`Unable to find timer with id = ${id}`)
+	}
+
+	const handlePlay = (id: string) => {
+		const timer = getTimer(id)
+		updateTimer(id, {...timer, addTime: dayjs()})
 	};
 
-	const handlePause = (timer: ITimer) => {
-		const newTimers = timers.map((t) => {
-			if (t.id === timer.id) {
-				const currentElapsedTime = dayjs().diff(t.addTime);
-				return {
-					...t,
-					elapsedTime: t.elapsedTime + currentElapsedTime,
-					addTime: null,
-					isActive: false,
-				};
-			}
-			return t;
-		});
-
-		setTimers(newTimers);
+	const handlePause = (id: string) => {
+		const timer = getTimer(id)
+		const currentElapsedTime = dayjs().diff(timer.addTime);
+		updateTimer(id, {...timer, elapsedTime: timer.elapsedTime + currentElapsedTime, addTime: null})
 	};
 
 	const handleDelete = (id:string)=>{
-		setTimers(prevTimers => prevTimers.filter(t=>t.id !== id))
+		deleteTimer(id)
 	}
 
 	return(
@@ -56,8 +43,8 @@ export const TimersWall = ()=>{
 				<button onClick={handleAddTimer}>+ Add timer</button>
 			</div>
 			<div className={css.timersWallContainer}>
-				{timers.map((timer)=>(
-					<TimerCard key={timer.id} value={timer} onPlay={()=>handlePlay(timer)} onPause={()=>handlePause(timer)} onDelete={() => handleDelete(timer.id)}/>
+				{Array.from(timers).map(([id, timer])=>(
+					<TimerCard key={id} timer={timer} onPlay={()=>handlePlay(id)} onPause={()=>handlePause(id)} onDelete={() => handleDelete(id)}/>
 				))}
 			</div>
 		</div>

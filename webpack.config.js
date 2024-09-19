@@ -45,7 +45,7 @@ module.exports = (env) => {
 				},
 				//ts loader
 				{
-					test: /\.tsx$/,
+					test: /\.tsx?$/,
 					exclude: modulesDir,
 					use: {
 						loader: 'ts-loader',
