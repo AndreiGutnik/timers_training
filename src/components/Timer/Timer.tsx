@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import * as css from './style.css';
 
-import * as dayjs from 'dayjs';
 import { ITimer } from '../../types';
 import { isTimerActive } from '../../utils/isTimerActive';
 import { TimerDigitalDisplay } from '../TimerDigitalDisplay/TimerDigitalDisplay';
+import { TimerSymbolDisplay } from '../TimerSymbolDisplay/TimerSymbolDisplay';
+import React, { useId } from 'react';
+import { useTimerDuration } from '../../hooks/useTimerDuration';
 
 interface TimerCardProps {
   timer: ITimer;
@@ -13,43 +15,57 @@ interface TimerCardProps {
   onDelete: () => void;
 }
 
+enum DisplayOptionTypes {
+  DIGITAL = 'digital',
+  SYMBOL = 'symbol',
+}
+
+const DISPLAY_OPTION = {
+  [DisplayOptionTypes.DIGITAL]: TimerDigitalDisplay,
+  [DisplayOptionTypes.SYMBOL]: TimerSymbolDisplay,
+};
+
 export const TimerCard = (props: TimerCardProps) => {
-  const { addTime, elapsedTime } = props.timer;
+  const id = useId();
+  const { timer } = props;
 
-  const isActive = isTimerActive(props.timer);
+  const isActive = isTimerActive(timer);
 
-  const intervalId = useRef(null);
-  const [displayTime, setDisplayTime] = useState(elapsedTime);
+  const duration = useTimerDuration(timer);
+  const [displayOption, setDisplayOption] = useState('digital');
 
-  useEffect(() => {
-    if (!isActive) {
-      setDisplayTime(elapsedTime);
-      return;
+  const renderDisplay = () => {
+    const Display = DISPLAY_OPTION[displayOption];
+
+    if (!Display) {
+      throw new Error('Unknown display type');
     }
-    intervalId.current = setInterval(() => {
-      const currentTime = dayjs().diff(addTime) + elapsedTime;
-      setDisplayTime(currentTime);
-    }, 1000);
-    return () => {
-      if (intervalId.current) {
-        clearInterval(intervalId.current);
-      }
-    };
-  }, [isActive, addTime, elapsedTime]);
+    return <Display duration={duration} />;
+  };
 
-  const getDuration = () => {
-    const currentTime = dayjs();
-    let currentDuration = elapsedTime;
-    if (addTime) {
-      currentDuration += currentTime.diff(addTime, 'ms');
-    }
-    return dayjs.duration(displayTime);
+  const renderOptionsPicker = () => {
+    const displayOptions = Object.values(DisplayOptionTypes);
+    const radioElements = displayOptions.map(option => (
+      <React.Fragment key={option}>
+        <input
+          type="radio"
+          name={`display_option_${id}`}
+          value={option}
+          checked={displayOption === option}
+          onChange={() => setDisplayOption(option)}
+        />
+        <label htmlFor={option}>{option}</label>
+      </React.Fragment>
+    ));
+
+    return radioElements;
   };
 
   return (
     <div className={css.timer}>
+      <div key="display_option">{renderOptionsPicker()}</div>
       <div key="container">
-        <TimerDigitalDisplay duration={getDuration()} />
+        {renderDisplay()}
         <div key="action">
           <div>
             <button

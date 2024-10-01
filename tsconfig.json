@@ -1,10 +1,9 @@
 {
-	"compilerOptions": {
-		"moduleResolution": "node",
-		"target": "esnext",
-		"jsx": "react-jsx",
-	},
-	"include": [
-		"src"
-	],
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "esnext",
+    "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src"]
 }
