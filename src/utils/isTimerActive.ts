@@ -1,3 +1,3 @@
-import { ITimer } from "../types";
+import { ITimer } from '../types';
 
-export const isTimerActive = (timer:ITimer) => timer.addTime !== null
+export const isTimerActive = (timer: ITimer) => timer.startTime !== null;

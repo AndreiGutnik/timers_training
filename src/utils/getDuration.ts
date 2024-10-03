@@ -1,12 +1,13 @@
-import { ITimer } from '../types';
-import * as dayjs from 'dayjs';
+import { ITimer, TimerType } from '../types';
+import { getStopWatchDuration } from './getStopWatchDuration';
+import { getCountDownDuration } from './getCountDownDuration';
 
 export const getDuration = (timer: ITimer) => {
-  const { addTime, elapsedTime } = timer;
-  const currentTime = dayjs();
-  let currentDuration = elapsedTime;
-  if (addTime) {
-    currentDuration += currentTime.diff(addTime, 'ms');
+  const { type, durationMs, startTime } = timer;
+
+  if (type === TimerType.STOPWATCH) {
+    return getStopWatchDuration(durationMs, startTime);
+  } else if (type === TimerType.COUNTDOWN) {
+    return getCountDownDuration(durationMs, startTime);
   }
-  return dayjs.duration(currentDuration, 'ms');
 };

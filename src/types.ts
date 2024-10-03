@@ -1,6 +1,20 @@
-import * as dayjs from 'dayjs'
+import * as dayjs from 'dayjs';
 
-export interface ITimer{
-	addTime: dayjs.Dayjs | null;
-	elapsedTime: number;
+export enum TimerType {
+  STOPWATCH = 'stopwatch',
+  COUNTDOWN = 'countdown',
+}
+
+export interface ITimer {
+  type: TimerType;
+  startTime: dayjs.Dayjs | null;
+  durationMs: number;
+}
+
+export interface ITimerStopWatch extends ITimer {
+  type: TimerType.STOPWATCH;
+}
+
+export interface ITimerCountDown extends ITimer {
+  type: TimerType.COUNTDOWN;
 }
