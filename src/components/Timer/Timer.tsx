@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import * as css from './style.css';
 
-import { ITimer } from '../../types';
-import { isTimerActive } from '../../utils/isTimerActive';
 import { TimerDigitalDisplay } from '../TimerDigitalDisplay/TimerDigitalDisplay';
 import { TimerSymbolDisplay } from '../TimerSymbolDisplay/TimerSymbolDisplay';
 import React, { useId } from 'react';
-import { useTimerDuration } from '../../hooks/useTimerDuration';
+import { Duration } from 'dayjs/plugin/duration';
 
 interface TimerCardProps {
-  timer: ITimer;
+  duration: Duration;
+	isActive: boolean;
   onPlay: () => void;
   onPause: () => void;
   onDelete: () => void;
@@ -27,11 +26,8 @@ const DISPLAY_OPTION = {
 
 export const TimerCard = (props: TimerCardProps) => {
   const id = useId();
-  const { timer } = props;
+  const { duration, isActive } = props;
 
-  const isActive = isTimerActive(timer);
-
-  const duration = useTimerDuration(timer);
   const [displayOption, setDisplayOption] = useState('digital');
 
   const renderDisplay = () => {
