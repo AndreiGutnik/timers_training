@@ -13,7 +13,7 @@ export const useTimerDuration = (timer: ITimer, isActive: boolean) => {
 		return () => {
 			clearInterval(intervalId);
 		};
-	}, [isActive]);
+	}, [isActive, timer]);
 
 	return duration;
 };
