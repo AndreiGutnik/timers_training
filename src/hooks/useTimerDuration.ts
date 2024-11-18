@@ -8,7 +8,7 @@ export const useTimerDuration = (timer: ITimer, isActive: boolean) => {
 	useEffect(() => {
 		if (!isActive) return;
 
-		const intervalId = setInterval(() => setDurationTime(getDuration(timer)), 1000);
+		const intervalId = setInterval(() => setDurationTime(getDuration(timer)), 1000)
 
 		return () => {
 			clearInterval(intervalId);

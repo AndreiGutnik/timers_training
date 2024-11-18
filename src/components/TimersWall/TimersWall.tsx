@@ -6,10 +6,13 @@ import { AddStopWatchPanel } from '../AddStopWatchPanel/AddStopWatchPanel';
 import { AddCountDownPanel } from '../AddCountDownPanel/AddCountDownPanel';
 import { TimerStopWatchController } from '../TimerStopWatchController/TimerStopWatchController';
 import { TimerCountDownController } from '../TimerCountDownController/TimerCountDownController';
+import { TimerStopWatch5Controller } from '../TimerStopWatch5Controller/TimerStopWatch5Controller';
+import { AddStopWatch5Panel } from '../AddStopWatch5Panel/AddStopWatch5Panel';
 
 const TIMER_CONTROLLERS = {
+	[TimerType.STOPWATCH]: TimerStopWatchController,
 	[TimerType.COUNTDOWN]: TimerCountDownController,
-	[TimerType.STOPWATCH]: TimerStopWatchController
+	[TimerType.STOPWATCH5]: TimerStopWatch5Controller
 }
 
 export const TimersWall = () => {
@@ -33,6 +36,7 @@ export const TimersWall = () => {
 		<div className={css.timersWall}>
 			<div key="timersWallActions">
 				<AddStopWatchPanel onClick={() => createTimer(TimerType.STOPWATCH, 0)} />
+				<AddStopWatch5Panel onClick={() => createTimer(TimerType.STOPWATCH5, 0)} />
 				<AddCountDownPanel
 					onClick={durationMs => createTimer(TimerType.COUNTDOWN, durationMs)}
 				/>

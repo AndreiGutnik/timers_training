@@ -3,6 +3,7 @@ import * as dayjs from 'dayjs';
 export enum TimerType {
   STOPWATCH = 'stopwatch',
   COUNTDOWN = 'countdown',
+	STOPWATCH5 = 'stopwatch5',
 }
 
 export interface ITimer {
